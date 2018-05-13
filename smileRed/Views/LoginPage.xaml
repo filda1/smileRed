@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="smileRed.Views.LoginPage"
+             BindingContext="{Binding Main, Source={StaticResource Locator}}" 
+             NavigationPage.HasNavigationBar="False"
+             NavigationPage.HasBackButton="False"
+             BackgroundColor="#dd1021">
+        
+    <ContentPage.Content>
+        <ScrollView BindingContext="{Binding Login}">
+            <StackLayout Padding="29,69,29,5">
+                <Image
+                    Source="tons.png"
+                    HeightRequest="140"
+                    WidthRequest="170"
+                    HorizontalOptions="CenterAndExpand">
+                </Image>
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Entry                        
+                        Grid.Row="0" 
+                        Placeholder="Email "
+                        Text="{Binding Email, Mode=TwoWay}" 
+                        PlaceholderColor="#bababa"  
+                        BackgroundColor="White" 
+                        FontFamily="Rambla" 
+                        FontSize="17"
+                        HeightRequest="48"/>
+                    <Entry                        
+                        Grid.Row="1" 
+                        Placeholder="Password"  
+                        Text="{Binding Password, Mode=TwoWay}" 
+                        IsPassword="true" 
+                        PlaceholderColor="#bababa"  
+                        BackgroundColor="White" 
+                        FontFamily="Enriqueta"                        
+                        FontSize="17"
+                        HeightRequest="48"/>
+                </Grid>
+                <StackLayout>
+                    <Button 
+                       x:Name="ButtonLogin"
+                       Command="{Binding LoginCommand}"
+                       Text="Entrar"                                                                  
+                       IsEnabled="{Binding IsEnabled, Mode=TwoWay}" 
+                       BackgroundColor="#FFC300" 
+                       TextColor="White"                                                           
+                       FontFamily="Enriqueta" 
+                       FontAttributes="Bold" 
+                       FontSize="17"
+                       BorderRadius="0"/>
+                </StackLayout>
+                <StackLayout >
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0.6*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button
+                       x:Name="ButtonAyuda"
+                       Command="{Binding HelpCommand}"
+                       IsEnabled="{Binding IsEnabled, Mode=TwoWay}"      
+                       Grid.Row="0"
+                       Grid.Column="0"
+                       Text="Ayuda?"                                               
+                       BackgroundColor="#ef982b" 
+                       TextColor="White"                                         
+                       FontFamily="Enriqueta" 
+                       FontAttributes="Bold" 
+                       FontSize="Medium"
+                       BorderRadius="0"/>
+                        <Button
+                       x:Name="ButtonRegistate"
+                       Command="{Binding RegisterCommand}"
+                       IsEnabled="{Binding IsEnabled, Mode=TwoWay}"      
+                       Grid.Row="0"
+                       Grid.Column="1"
+                       Text="Regista-te"                    
+                       BackgroundColor="#ef982b"
+                       TextColor="White"                      
+                       FontFamily="Enriqueta" 
+                       FontAttributes="Bold" 
+                       FontSize="Medium"
+                       BorderRadius="0"/>
+                    </Grid>
+                </StackLayout>
+                <StackLayout Padding="0,0,0,100">
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" Padding="140,0,140,0">
+                    <Image Source="face.png"  HeightRequest="20"/>
+                    <Image Source="logo.png"  HeightRequest="20"/>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>
