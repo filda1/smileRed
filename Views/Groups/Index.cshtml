@@ -1,0 +1,41 @@
+﻿@model IEnumerable<smileRed.Domain.Group>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Categories</h2>
+<p>
+    @Html.ActionLink("New Category", "Create", "Groups")  /  @Html.ActionLink("New Product", "Create", "Products")
+</p>
+<div class="table-responsive">
+    <div></div><div></div>
+    <table class="table table-bordered">
+        <tr class="active">
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+               
+                @Html.ActionLink("Details", "Details", new { id = item.CategoryId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.CategoryId })
+            </td>
+        </tr>
+        }
+    </table>
+</div>

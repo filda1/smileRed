@@ -1,0 +1,74 @@
+﻿@model IEnumerable<smileRed.Backend.Models.ReservationsUsers>
+@{
+    ViewBag.Title = "ViewReservations";
+}
+<h2>Reservations</h2>
+<meta http-equiv="refresh" content="30">
+<h4 class="text-danger">( @ViewBag.Count )</h4>
+<div class="table-responsive">
+    <div></div><div></div>
+    <table class="table table-bordered ">
+        <tr class="active">
+            <th>
+                @Html.DisplayNameFor(model => model.ReservationId)
+            </th>
+       
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>        
+            <th>
+                @Html.DisplayNameFor(model => model.Email
+           )
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReservationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Remarks)
+            </th>
+            <th>
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReservationId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>            
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReservationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Remarks)
+                </td>              
+                <td>
+                    @Html.ActionLink("Delete", "DeleteReservations", new { id = item.ReservationId })
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

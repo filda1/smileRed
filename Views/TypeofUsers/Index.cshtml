@@ -1,0 +1,48 @@
+﻿@model IEnumerable<smileRed.Domain.TypeofUser>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>TypeofUsers</h2>
+
+<p>
+    @Html.ActionLink("New TypeofUser", "Create")
+</p>
+<div class="table-responsive">
+    <div></div><div></div>
+    <table class="table table-bordered">
+        <tr class="active">
+            <th>
+                @Html.DisplayNameFor(model => model.TypeofUsers)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TypeofUsers)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.TypeofUserId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.TypeofUserId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.TypeofUserId })
+                </td>
+            </tr>
+        }
+    </table>
+</div>
