@@ -1,0 +1,60 @@
+﻿@model IEnumerable<smileRed.Backend.Controllers.Nutrition>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Nutrition</h2>
+
+<p>
+    @Html.ActionLink("New Nutrition", "Create")
+</p>
+<div class="table-responsive">
+    <div></div><div></div>
+    <table class="table table-bordered ">
+        <tr class="active">
+            <th>
+                @Html.DisplayNameFor(model => model.ProductId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Calories)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalFat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Carbohydrates)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Proteins)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Calories)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalFat)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Carbohydrates)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Proteins)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.NutritionId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.NutritionId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.NutritionId })
+                </td>
+            </tr>
+        }
+    </table>
+</div>
