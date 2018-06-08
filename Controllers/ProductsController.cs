@@ -56,12 +56,25 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(
-            Product product)
+        public async Task<ActionResult> Create(Product product)
         {
             string nameProduct = Convert.ToString(Request["Name"]);
+             int categoryId = int.Parse(Request["CategoryId"]);
+           
+            if (categoryId == 0)
+            {
+                ViewBag.Error = "You must select  a product";
+                var ty = db.Groups.ToList();
+                ty.Add(new Group { CategoryId = 0, Description = "Select a product..." });
+                ViewBag.CategoryId = new SelectList(
+                     ty.OrderBy(c => c.CategoryId),
+                    "CategoryId", "Description", "Description");
+
+                return View(product);
+            }
+
             var existPC = db.Products.Where(pc => 
-                       pc.Name == nameProduct).FirstOrDefault();
+                       pc.Name == nameProduct ).FirstOrDefault();
 
             if (existPC != null)
             {
@@ -72,7 +85,7 @@ namespace smileRed.Backend.Controllers
                      ty.OrderBy(c => c.CategoryId),
                     "CategoryId", "Description", "Description");
 
-                return View();
+                return View(product);
             }
 
             if (ModelState.IsValid)
@@ -89,6 +102,9 @@ namespace smileRed.Backend.Controllers
         // GET: Products/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
+            string name = db.Products.Where(p => p.ProductId == id).FirstOrDefault().Name;
+            ViewBag.Name = name;
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

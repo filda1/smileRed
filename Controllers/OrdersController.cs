@@ -18,13 +18,16 @@ namespace smileRed.Backend.Controllers
         // GET: Orders
         public ActionResult ViewOrders()
         {
-           var today = DateTime.Today;
+            DateTime thisTime = DateTime.Now;
+            TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            DateTime TimePT = TimeZoneInfo.ConvertTime(thisTime, TimeZoneInfo.Local, InfoZone);
+
             var q = (from o in db.Orders
                      join od in db.OrderDetails on o.OrderID equals od.OrderID
                      join u in db.Users on o.Email equals u.Email
                      join p in db.Products on od.ProductID equals p.ProductId
                      where o.ActiveOrders == true && od.ActiveOrderDetails == true
-                     && o.DateOrder >= today
+                     && o.DateOrder >= TimePT
                      select new
                      {
                          o.OrderID,
@@ -62,6 +65,7 @@ namespace smileRed.Backend.Controllers
                     Address = t.Address
                 });
             }
+            ViewBag.TIMEZONE = TimePT;
             ViewBag.Count = productorders.Count();
             return View(productorders);
         }
@@ -69,7 +73,9 @@ namespace smileRed.Backend.Controllers
         // GET: Products/Details/5
         public  ActionResult DetailsAllOrders(int? id)
         {
-            var today = DateTime.Today;
+            DateTime thisTime = DateTime.Now;
+            TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            DateTime TimePT = TimeZoneInfo.ConvertTime(thisTime, TimeZoneInfo.Local, InfoZone);
 
             if (id == null)
             {
@@ -82,7 +88,7 @@ namespace smileRed.Backend.Controllers
                      join u in db.Users on o.Email equals u.Email
                      join p in db.Products on od.ProductID equals p.ProductId
                      where o.ActiveOrders == true && od.ActiveOrderDetails == true
-                     && o.OrderID == id && o.DateOrder >= today
+                     && o.OrderID == id && o.DateOrder >= TimePT
                      select new
                      {
                          o.OrderID,

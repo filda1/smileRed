@@ -19,7 +19,7 @@ namespace smileRed.Backend.Controllers
         // GET: Orders1
         public async Task<ActionResult> Index()
         {
-            var orders = db.Orders.Include(o => o.Customer);
+            var orders = db.Orders.Include(o => o.Customer).Include(o => o.OrderStatuses);
             return View(await orders.ToListAsync());
         }
 
@@ -41,7 +41,7 @@ namespace smileRed.Backend.Controllers
         // GET: Orders1/Create
         public ActionResult Create()
         {
-    
+            ViewBag.OrderStatusID = new SelectList(db.OrderStatus, "OrderStatusID", "OrderStatusName");
             ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName");
             return View();
         }
@@ -51,17 +51,29 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "OrderID,UserId,Email,DateOrder,VisibleOrders,ActiveOrders")] Order order)
+        public async Task<ActionResult> Create( Order order)
         {
-            DateTime today = DateTime.Today;
+            var orderStatus = order.OrderStatusID;
+            DateTime thisTime = DateTime.Now;
+            TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            DateTime TimePT = TimeZoneInfo.ConvertTime(thisTime, TimeZoneInfo.Local, InfoZone);
+
             DateTime dataOrder = Convert.ToDateTime(Request["DateOrder"]);
-            if (dataOrder < today)
+            if (dataOrder < TimePT)
             {
-                ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", order.UserId);
+                ViewBag.OrderStatusID = new SelectList(db.OrderStatus, "OrderStatusID", "OrderStatusName", order.OrderStatusID);
+                ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", order.UserId);        
                 ViewBag.Error = "The order date can not be less than today!";
 
                 return View();
             }
+
+            if (orderStatus == 0)
+            {
+                ViewBag.Error = "Select Order Status!";
+                return View();
+            }
+             
 
             if (ModelState.IsValid)
             {
@@ -70,6 +82,7 @@ namespace smileRed.Backend.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.OrderStatusID = new SelectList(db.OrderStatus, "OrderStatusID", "OrderStatusName", order.OrderStatusID);
             ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", order.UserId);
             return View(order);
         }
@@ -86,6 +99,7 @@ namespace smileRed.Backend.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.OrderStatusID = new SelectList(db.OrderStatus, "OrderStatusID", "OrderStatusName", order.OrderStatusID);
             ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", order.UserId);
             return View(order);
         }
@@ -95,24 +109,15 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "OrderID,UserId,Email,DateOrder,VisibleOrders,ActiveOrders")] Order order)
-        {
-            DateTime today = DateTime.Today;
-            DateTime dataOrder = Convert.ToDateTime(Request["DateOrder"]);
-            if (dataOrder < today)
-            {
-                ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", order.UserId);
-                ViewBag.Error = "The order date can not be less than today!";
-         
-                return View();
-            }
-
+        public async Task<ActionResult> Edit( Order order)
+        {     
             if (ModelState.IsValid)
             {
                 db.Entry(order).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+            ViewBag.OrderStatusID = new SelectList(db.OrderStatus, "OrderStatusID", "OrderStatusName", order.OrderStatusID);
             ViewBag.UserId = new SelectList(db.Users, "UserId", "FullName", order.UserId);
             return View(order);
         }

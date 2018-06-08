@@ -64,7 +64,48 @@ namespace smileRed.Backend.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create( OrderDetails orderDetails)
-        {
+        {            
+            int productId = int.Parse(Request["ProductID"]);
+            int orderId = int.Parse(Request["OrderID"]);
+
+            if (productId == 0  || orderId == 0)
+            {
+                ViewBag.Error = "Orders or Product is not selected!";
+                var o = db.Orders.ToList();
+                o.Add(new Order { OrderID = 0 });
+                ViewBag.OrderID = new SelectList(
+                     o.OrderBy(c => c.OrderID),
+                    "OrderID", "OrderID", "OrderID");
+
+                var p = db.Products.ToList();
+                p.Add(new Product { ProductId = 0, Name = "Select a products..." });
+                ViewBag.ProductID = new SelectList(
+                     p.OrderBy(c => c.ProductId),
+                    "ProductID", "Name", "Name");
+                return View();
+            }
+
+            /*var existOD = db.OrderDetails.Where(od =>
+                      od.ProductID == productId  && od.OrderID == orderId).FirstOrDefault();
+
+            if (existOD != null)
+            {
+                ViewBag.Error = "The Order y product already exists!";
+                var o = db.Orders.ToList();
+                o.Add(new Order { OrderID = 0 });
+                ViewBag.OrderID = new SelectList(
+                     o.OrderBy(c => c.OrderID),
+                    "OrderID", "OrderID", "OrderID");
+
+                var p = db.Products.ToList();
+                p.Add(new Product { ProductId = 0, Name = "Select a products..." });
+                ViewBag.ProductID = new SelectList(
+                     p.OrderBy(c => c.ProductId),
+                    "ProductID", "Name", "Name");
+
+                return View();
+            } */
+
             if (ModelState.IsValid)
             {
                 db.OrderDetails.Add(orderDetails);

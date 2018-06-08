@@ -25,7 +25,7 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Products<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Categories", "Index", "Groups")</li>
-                            <li>@Html.ActionLink("Ingredients", "ViewIngredients", "Ingredient")</li>
+                            <li>@Html.ActionLink("Ingredients", "Index", "Admixtures")</li>
                             <li>@Html.ActionLink("Nutritions", "Index", "Nutritions")</li>
                             <li>@Html.ActionLink("Offers", "Index", "Offerts")</li>
                             <li>@Html.ActionLink("Products", "Index", "Products")</li>
@@ -42,9 +42,11 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Orders<b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Orders", "Index", "Orders1")</li>
-                            <li>@Html.ActionLink("OrderDetails", "Index", "OrderDetails")</li>
                             <li>@Html.ActionLink("All", "ViewOrders", "Orders")</li>
+                            <li>@Html.ActionLink("Orders", "Index", "Orders1")</li>
+                            <li>@Html.ActionLink("Order Details", "Index", "OrderDetails")</li>
+                            <li>@Html.ActionLink("Order Status", "Index", "OrderStatus")</li>
+
                         </ul>
                     <li>@Html.ActionLink("Reservation", "ViewReservation", "Reservation")</li>
                     <li class="dropdown">

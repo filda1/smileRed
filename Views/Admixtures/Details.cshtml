@@ -1,0 +1,33 @@
+﻿@model smileRed.Domain.Admixtures
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+<div>
+    
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Product.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Product.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ingredient)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ingredient)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IngredientsId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

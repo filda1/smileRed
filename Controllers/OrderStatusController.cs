@@ -12,120 +12,107 @@ using smileRed.Domain;
 
 namespace smileRed.Backend.Controllers
 {
-    public class TypeofUsersController : Controller
+    public class OrderStatusController : Controller
     {
         private LocalDataContext db = new LocalDataContext();
 
-        // GET: TypeofUsers
+        // GET: OrderStatus
         public async Task<ActionResult> Index()
         {
-            return View(await db.TypeofUsers.ToListAsync());
+            return View(await db.OrderStatus.ToListAsync());
         }
 
-        // GET: TypeofUsers/Details/5
+        // GET: OrderStatus/Details/5
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TypeofUser typeofUser = await db.TypeofUsers.FindAsync(id);
-            if (typeofUser == null)
+            OrderStatus orderStatus = await db.OrderStatus.FindAsync(id);
+            if (orderStatus == null)
             {
                 return HttpNotFound();
             }
-            return View(typeofUser);
+            return View(orderStatus);
         }
 
-        // GET: TypeofUsers/Create
+        // GET: OrderStatus/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: TypeofUsers/Create
+        // POST: OrderStatus/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "TypeofUserId,TypeofUsers,Description,Active")] TypeofUser typeofUser)
+        public async Task<ActionResult> Create([Bind(Include = "OrderStatusID,OrderStatusName")] OrderStatus orderStatus)
         {
-            string nameTypeofUsers = Convert.ToString(Request["TypeofUsers"]);
-            var existT = db.TypeofUsers.Where(ty =>
-                       ty.TypeofUsers == nameTypeofUsers).FirstOrDefault();
-
-            if (existT != null)
-            {
-                ViewBag.Error = "The Type of users already exist!";
-                return View();
-            }
-
             if (ModelState.IsValid)
             {
-                db.TypeofUsers.Add(typeofUser);
+                db.OrderStatus.Add(orderStatus);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(typeofUser);
+            return View(orderStatus);
         }
 
-        // GET: TypeofUsers/Edit/5
+        // GET: OrderStatus/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
-            string name = db.TypeofUsers.Where(t => t.TypeofUserId == id).FirstOrDefault().TypeofUsers;
-            ViewBag.Name = name;
-
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TypeofUser typeofUser = await db.TypeofUsers.FindAsync(id);
-            if (typeofUser == null)
+            OrderStatus orderStatus = await db.OrderStatus.FindAsync(id);
+            if (orderStatus == null)
             {
                 return HttpNotFound();
             }
-            return View(typeofUser);
+            return View(orderStatus);
         }
 
-        // POST: TypeofUsers/Edit/5
+        // POST: OrderStatus/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "TypeofUserId,TypeofUsers,Description,Active")] TypeofUser typeofUser)
+        public async Task<ActionResult> Edit([Bind(Include = "OrderStatusID,OrderStatusName")] OrderStatus orderStatus)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(typeofUser).State = EntityState.Modified;
+                db.Entry(orderStatus).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(typeofUser);
+            return View(orderStatus);
         }
 
-        // GET: TypeofUsers/Delete/5
+        // GET: OrderStatus/Delete/5
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TypeofUser typeofUser = await db.TypeofUsers.FindAsync(id);
-            if (typeofUser == null)
+            OrderStatus orderStatus = await db.OrderStatus.FindAsync(id);
+            if (orderStatus == null)
             {
                 return HttpNotFound();
             }
-            return View(typeofUser);
+            return View(orderStatus);
         }
 
-        // POST: TypeofUsers/Delete/5
+        // POST: OrderStatus/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            TypeofUser typeofUser = await db.TypeofUsers.FindAsync(id);
-            db.TypeofUsers.Remove(typeofUser);
+            OrderStatus orderStatus = await db.OrderStatus.FindAsync(id);
+            db.OrderStatus.Remove(orderStatus);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

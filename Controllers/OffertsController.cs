@@ -58,9 +58,36 @@ namespace smileRed.Backend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "OffertId,ProductId,Offer,Description,Image,StartDate,EndofDate,IsActive,Remarks")] Offert offert)
         {
+            DateTime thisTime = DateTime.Now;
+            TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            DateTime TimePT = TimeZoneInfo.ConvertTime(thisTime, TimeZoneInfo.Local, InfoZone);
+
             int productId = int.Parse(Request["ProductId"]);
-            var existP = db.Products.Where(u =>
-                       u.ProductId == productId).FirstOrDefault();
+            if (productId == 0)
+            {
+                ViewBag.Error = "You must select  a product!";
+                var pro = db.Products.ToList();
+                pro.Add(new Product { ProductId = 0, Name = "Select a product..." });
+                ViewBag.ProductId = new SelectList(
+                     pro.OrderBy(c => c.ProductId),
+                    "ProductId", "Name", "Name");
+
+                return View();
+            }
+       
+            DateTime startDate = Convert.ToDateTime(Request["StartDate"]);
+            DateTime endofDate = Convert.ToDateTime(Request["EndofDate"]);
+
+            if (startDate < TimePT || endofDate < TimePT)
+            {
+                ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", offert.ProductId);
+                ViewBag.Error = "The date can not be less than today!";
+
+                return View();
+            }
+
+            var existP = db.Offerts.Where(o =>
+                       o.ProductId == productId).FirstOrDefault();
 
             if (existP != null)
             {
@@ -88,6 +115,9 @@ namespace smileRed.Backend.Controllers
         // GET: Offerts/Edit/5
         public async Task<ActionResult> Edit(int? id)
         {
+            string name = db.Offerts.Where(o => o.OffertId == id).FirstOrDefault().Product.Name;
+            ViewBag.Name = name;
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -108,6 +138,19 @@ namespace smileRed.Backend.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = "OffertId,ProductId,Offer,Description,Image,StartDate,EndofDate,IsActive,Remarks")] Offert offert)
         {
+            DateTime thisTime = DateTime.Now;
+            TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            DateTime TimePT = TimeZoneInfo.ConvertTime(thisTime, TimeZoneInfo.Local, InfoZone);
+
+            var stardate = offert.StartDate;
+            var enddate = offert.EndofDate;
+            if (stardate < TimePT || enddate < TimePT)
+            {
+                ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", offert.ProductId);
+                ViewBag.Error = "The date can not be less than today!";
+
+                return View();
+            }
 
             if (ModelState.IsValid)
             {

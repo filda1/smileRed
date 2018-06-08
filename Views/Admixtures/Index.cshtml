@@ -1,0 +1,47 @@
+﻿@model IEnumerable<smileRed.Domain.Admixtures>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Ingredients</h2>
+<p>
+    @Html.ActionLink("New Ingredient", "Create")
+</p>
+<div class="table-responsive">
+    <div></div><div></div>
+    <table class="table table-bordered">
+        <tr class="active">
+            <th>
+                @Html.DisplayNameFor(model => model.IngredientsId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ingredient)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                  @Html.DisplayFor(modelItem => item.IngredientsId)
+                </td>  
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ingredient)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.IngredientsId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.IngredientsId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.IngredientsId })
+                </td>
+            </tr>
+        }
+    </table>
+   </div>

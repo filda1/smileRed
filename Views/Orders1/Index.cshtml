@@ -27,6 +27,9 @@
                 @Html.DisplayNameFor(model => model.DateOrder)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.OrderStatuses.OrderStatusName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.VisibleOrders)
             </th>
             <th>
@@ -37,31 +40,34 @@
 
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OrderID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Customer.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateOrder)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VisibleOrders)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ActiveOrders)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.OrderID }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.OrderID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.OrderID })
-                </td>
-            </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateOrder)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderStatuses.OrderStatusName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VisibleOrders)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ActiveOrders)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.OrderID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.OrderID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.OrderID })
+            </td>
+        </tr>
         }
     </table>
 </div>

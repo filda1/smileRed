@@ -1,0 +1,42 @@
+﻿@model IEnumerable<smileRed.Domain.OrderStatus>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>OrderStatus</h2>
+
+<p>
+    @Html.ActionLink("New OrderStatus", "Create")
+</p>
+<div class="table-responsive">
+    <div></div><div></div>
+    <table class="table table-bordered ">
+        <tr class="active">
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatusID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderStatusName)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderStatusID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderStatusName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.OrderStatusID }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.OrderStatusID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.OrderStatusID })
+                </td>
+            </tr>
+        }
+    </table>
+  </div>

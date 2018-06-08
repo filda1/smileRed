@@ -59,8 +59,21 @@ namespace smileRed.Backend.Controllers
         public async Task<ActionResult> Create([Bind(Include = "UserId,TypeofUserId,FirstName,LastName,Email,Telephone,Address,Location,Code,Door,ImagePath,Active")] User user)
         {
             string email = Convert.ToString(Request["Email"]);
+            int typeofUserId = int.Parse(Request["TypeofUserId"]);
             var existU = db.Users.Where(u =>
                        u.Email == email).FirstOrDefault();
+            
+            if (typeofUserId == 0)
+            {
+                ViewBag.Error = "You must select  a type of users!";
+                var ty = db.TypeofUsers.ToList();
+                ty.Add(new TypeofUser { TypeofUserId = 0, TypeofUsers = "Select a type of user..." });
+                ViewBag.TypeofUserId = new SelectList(
+                     ty.OrderBy(c => c.TypeofUserId),
+                    "TypeofUserId", "TypeofUsers", "TypeofUsers");
+
+                return View();
+            }
 
             if (existU != null)
             {
@@ -73,7 +86,6 @@ namespace smileRed.Backend.Controllers
 
                 return View();
             }
-
 
             if (ModelState.IsValid)
             {
