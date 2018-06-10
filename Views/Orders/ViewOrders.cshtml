@@ -1,10 +1,12 @@
 ﻿@model IEnumerable<smileRed.Backend.Models.ProductsOrders>
 @{
-                /**/
+    /**/
 
-                ViewBag.Title = "ViewOrders";
+    ViewBag.Title = "ViewOrders";
 }
-<h2>Orders</h2>
+
+<h2 >Orders<span class="badge badge-secondary">New : @ViewBag.TEST</span></h2>
+@Html.Raw(TempData["msg"])
 <meta http-equiv="refresh" content="30">
 <h4 class="text-danger">( @ViewBag.Count )</h4>
 <h5 alignt="right"> @ViewBag.TIMEZONE</h5>

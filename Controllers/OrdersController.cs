@@ -65,13 +65,40 @@ namespace smileRed.Backend.Controllers
                     Address = t.Address
                 });
             }
+            var countBD = productorders.Count();
             ViewBag.TIMEZONE = TimePT;
-            ViewBag.Count = productorders.Count();
+            ViewBag.Count = countBD;
+
+            int id = 1;
+            var n = db.Data.Find(id);
+            int numVirtual = n.VirtualCounter;
+            int _newCounter = countBD - numVirtual;
+            ViewBag.TEST = _newCounter;
+
+            if (countBD > numVirtual)
+            {
+                int newCounter = countBD - numVirtual;
+                ViewBag.TEST = newCounter;
+                TempData["msg"] = "<script>alert('New Orders');</script>";
+                var n2 = db.Data.Find(id);
+                n2.VirtualCounter = countBD;
+                db.SaveChanges();
+            }
+
+            if (countBD < numVirtual)
+            {
+                int newCounter = countBD;
+                ViewBag.TEST = newCounter;
+                var n2 = db.Data.Find(id);
+                n2.VirtualCounter = countBD;
+                db.SaveChanges();
+            }
+
             return View(productorders);
         }
 
         // GET: Products/Details/5
-        public  ActionResult DetailsAllOrders(int? id)
+        public ActionResult DetailsAllOrders(int? id)
         {
             DateTime thisTime = DateTime.Now;
             TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
@@ -151,7 +178,7 @@ namespace smileRed.Backend.Controllers
             decimal SUM_PriceVATQuantity = productorders.Where(p => p.OrderID == id).Sum(p => p.PriceVATQuantity);
             decimal _VAT = productorders.Where(p => p.OrderID == id).FirstOrDefault().VAT;
             //decimal _VATamount =  (_VAT / 100);
-           
+
             ViewBag.SUM_PriceQuantity = SUM_PriceQuantity;
             ViewBag.VAT = _VAT;
             ViewBag.SUM_PriceVATQuantity = SUM_PriceVATQuantity;

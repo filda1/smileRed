@@ -22,7 +22,7 @@ namespace smileRed.Backend.Models
         public System.Data.Entity.DbSet<smileRed.Backend.Controllers.Nutrition> Nutritions { get; set; }
         public System.Data.Entity.DbSet<smileRed.Domain.Offert> Offerts { get; set; }
         public System.Data.Entity.DbSet<smileRed.Domain.Admixtures> Admixtures { get; set; }
-
         public System.Data.Entity.DbSet<smileRed.Domain.OrderStatus> OrderStatus { get; set; }
+        public System.Data.Entity.DbSet<smileRed.Domain.Data> Data { get; set; }
     }
 }
