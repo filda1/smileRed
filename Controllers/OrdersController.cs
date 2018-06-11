@@ -75,11 +75,12 @@ namespace smileRed.Backend.Controllers
             int _newCounter = countBD - numVirtual;
             ViewBag.TEST = _newCounter;
 
-            if (countBD > numVirtual)
+           if (countBD > numVirtual)
             {
                 int newCounter = countBD - numVirtual;
                 ViewBag.TEST = newCounter;
-                TempData["msg"] = "<script>alert('New Orders');</script>";
+                TempData["msg"] = "<script> var snd = new Audio('/Sound/blip.wav');snd.play(); " +
+                "alert('New Orders');</script>";
                 var n2 = db.Data.Find(id);
                 n2.VirtualCounter = countBD;
                 db.SaveChanges();
@@ -93,7 +94,7 @@ namespace smileRed.Backend.Controllers
                 n2.VirtualCounter = countBD;
                 db.SaveChanges();
             }
-
+            
             return View(productorders);
         }
 

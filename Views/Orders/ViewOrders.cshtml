@@ -4,8 +4,7 @@
 
     ViewBag.Title = "ViewOrders";
 }
-
-<h2 >Orders<span class="badge badge-secondary">New : @ViewBag.TEST</span></h2>
+<h2>Orders<span class="badge badge-secondary">New : @ViewBag.TEST</span></h2>
 @Html.Raw(TempData["msg"])
 <meta http-equiv="refresh" content="30">
 <h4 class="text-danger">( @ViewBag.Count )</h4>
@@ -26,7 +25,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
@@ -46,7 +44,6 @@
         @foreach (var item in Model)
         {
             <tr>
-
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderDetailsID)
                 </td>
@@ -82,4 +79,5 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Sound/blip.wav")
 }
