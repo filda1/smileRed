@@ -9,6 +9,8 @@ using System.Web;
 using System.Web.Mvc;
 using smileRed.Backend.Models;
 using smileRed.Domain;
+using smileRed.Backend.Helpers;
+using System.Globalization;
 
 namespace smileRed.Backend.Controllers
 {
@@ -56,7 +58,7 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "OffertId,ProductId,Offer,Description,Image,StartDate,EndofDate,IsActive,Remarks")] Offert offert)
+        public async Task<ActionResult> Create( OffertView view)
         {
             DateTime thisTime = DateTime.Now;
             TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
@@ -72,18 +74,30 @@ namespace smileRed.Backend.Controllers
                      pro.OrderBy(c => c.ProductId),
                     "ProductId", "Name", "Name");
 
-                return View();
+                return View(view);
             }
-       
-            DateTime startDate = Convert.ToDateTime(Request["StartDate"]);
-            DateTime endofDate = Convert.ToDateTime(Request["EndofDate"]);
-
-            if (startDate < TimePT || endofDate < TimePT)
+            try
             {
-                ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", offert.ProductId);
-                ViewBag.Error = "The date can not be less than today!";
+                DateTime startDate = Convert.ToDateTime(Request["StartDate"]);
+                DateTime endofDate = Convert.ToDateTime(Request["EndofDate"]);
 
-                return View();
+                if (startDate < TimePT || endofDate < TimePT)
+                {
+                    ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", view.ProductId);
+                    ViewBag.Error = "The date can not be less than today!";
+
+                    return View(view);
+                }
+            }
+            catch
+            {
+                var pro = db.Products.ToList();
+                pro.Add(new Product { ProductId = 0, Name = "Select a product..." });
+                ViewBag.ProductId = new SelectList(
+                     pro.OrderBy(c => c.ProductId),
+                    "ProductId", "Name", "Name");
+
+                return View(view);
             }
 
             var existP = db.Offerts.Where(o =>
@@ -98,18 +112,45 @@ namespace smileRed.Backend.Controllers
                      pro.OrderBy(c => c.ProductId),
                     "ProductId", "Name", "Name");
 
-                return View();
+                return View(view);
             }
 
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+                var offert = ToOffert(view);
+                offert.Image = pic;
+
                 db.Offerts.Add(offert);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", offert.ProductId);
-            return View(offert);
+            ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", view.ProductId);
+            return View(view);
+        }
+
+        private Offert ToOffert(OffertView view)
+        {
+            return new Offert
+            {
+                OffertId = view.OffertId,
+                ProductId = view.ProductId,
+                Offer = view.Offer,
+                Description = view.Description,
+                Image = view.Image,
+                StartDate = view.StartDate,
+                EndofDate = view.EndofDate,
+                IsActive = view.IsActive,
+                Remarks = view.Remarks,
+            };
         }
 
         // GET: Offerts/Edit/5
@@ -128,39 +169,67 @@ namespace smileRed.Backend.Controllers
                 return HttpNotFound();
             }
             ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", offert.ProductId);
-            return View(offert);
+            var view = ToView(offert);
+            return View(view);
         }
 
+        private object ToView(Offert offert)
+        {
+            return new OffertView
+            {
+                OffertId = offert.OffertId,
+                ProductId = offert.ProductId,
+                Offer = offert.Offer,
+                Description = offert.Description,
+                Image = offert.Image,
+                StartDate = offert.StartDate,
+                EndofDate = offert.EndofDate,
+                IsActive = offert.IsActive,
+                Remarks = offert.Remarks,
+            };
+        }
         // POST: Offerts/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "OffertId,ProductId,Offer,Description,Image,StartDate,EndofDate,IsActive,Remarks")] Offert offert)
+        public async Task<ActionResult> Edit(OffertView view)
         {
             DateTime thisTime = DateTime.Now;
             TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
             DateTime TimePT = TimeZoneInfo.ConvertTime(thisTime, TimeZoneInfo.Local, InfoZone);
 
-            var stardate = offert.StartDate;
-            var enddate = offert.EndofDate;
+            var stardate = view.StartDate;
+            var enddate = view.EndofDate;
             if (stardate < TimePT || enddate < TimePT)
             {
-                ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", offert.ProductId);
+                ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", view.ProductId);
                 ViewBag.Error = "The date can not be less than today!";
 
-                return View();
+                return View(view);
             }
 
             if (ModelState.IsValid)
             {
+                var pic = view.Image;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+
+                var offert = ToOffert(view);
+                offert.Image = pic;
+
                 db.Entry(offert).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", offert.ProductId);
-            return View(offert);
+            ViewBag.ProductId = new SelectList(db.Products, "ProductId", "Name", view.ProductId);
+            return View(view);
         }
 
         // GET: Offerts/Delete/5

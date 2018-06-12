@@ -60,8 +60,8 @@ namespace smileRed.Backend.Controllers
         public async Task<ActionResult> Create(ProductView view)
         {
             string nameProduct = Convert.ToString(Request["Name"]);
-             int categoryId = int.Parse(Request["CategoryId"]);
-           
+            int categoryId = int.Parse(Request["CategoryId"]);
+
             if (categoryId == 0)
             {
                 ViewBag.Error = "You must select  a product";

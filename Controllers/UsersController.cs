@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using smileRed.Backend.Models;
 using smileRed.Domain;
+using smileRed.Backend.Helpers;
 
 namespace smileRed.Backend.Controllers
 {
@@ -56,7 +57,7 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "UserId,TypeofUserId,FirstName,LastName,Email,Telephone,Address,Location,Code,Door,ImagePath,Active")] User user)
+        public async Task<ActionResult> Create(UserView view)
         {
             string email = Convert.ToString(Request["Email"]);
             int typeofUserId = int.Parse(Request["TypeofUserId"]);
@@ -89,13 +90,34 @@ namespace smileRed.Backend.Controllers
 
             if (ModelState.IsValid)
             {
+                var user = this.ToUser(view);
                 db.Users.Add(user);
+                UsersHelper.CreateUserASP(view.Email, "User", view.Password);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.TypeofUserId = new SelectList(db.TypeofUsers, "TypeofUserId", "TypeofUsers", user.TypeofUserId);
-            return View(user);
+            ViewBag.TypeofUserId = new SelectList(db.TypeofUsers, "TypeofUserId", "TypeofUsers", view.TypeofUserId);
+            return View(view);
+        }
+
+        private User ToUser(UserView view)
+        {
+            return new User
+            {
+                UserId = view.UserId,
+                TypeofUserId = view.TypeofUserId,
+                FirstName = view.FirstName,
+                LastName = view.LastName,
+                Email = view.Email,
+                Telephone = view.Telephone,
+                Address = view.Address,
+                Location = view.Location,
+                Code = view.Code,
+                Door = view.Door,
+                ImagePath = view.ImagePath,
+                Active = view.Active,
+            };
         }
 
         // GET: Users/Edit/5
@@ -119,7 +141,7 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "UserId,TypeofUserId,FirstName,LastName,Email,Telephone,Address,Location,Code,Door,ImagePath,Active")] User user)
+        public async Task<ActionResult> Edit(User user)
         {
             using (var transaction = db.Database.BeginTransaction())
             {

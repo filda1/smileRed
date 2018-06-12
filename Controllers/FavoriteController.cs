@@ -44,8 +44,9 @@ namespace smileRed.Backend.Controllers
                     Name = t.Name,
                     Email = t.Email,
                     Description = t.Description,
-                    Image = t.Image,
-                    FavoriteDate = t.FavoriteDate
+                    //Image = t.Image,
+                    FavoriteDate = t.FavoriteDate,
+                    ProductId = t.ProductId,
                 });
             }
             return View(favoritesusersproducts);

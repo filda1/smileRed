@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using smileRed.Backend.Models;
 using smileRed.Domain;
+using smileRed.Backend.Helpers;
 
 namespace smileRed.Backend.Controllers
 {
@@ -48,7 +49,7 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "ContactsId,Company,Description,Email,Telephone,Address,Location,Code,Door,ImagePath,Active")] Contacts contacts)
+        public async Task<ActionResult> Create(ContactsView view)
         {
             string company = Convert.ToString(Request["Company"]);
             var existC = db.Contacts.Where(n => n.Company == company).FirstOrDefault();
@@ -61,12 +62,41 @@ namespace smileRed.Backend.Controllers
 
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+                var contacts = ToContacts(view);
+                contacts.ImagePath = pic;
+
                 db.Contacts.Add(contacts);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(contacts);
+            return View(view);
+        }
+
+        private Contacts ToContacts(ContactsView view)
+        {
+            return new Contacts
+            {
+                ContactsId = view.ContactsId,
+                Company = view.Company,
+                Description = view.Description,
+                Email = view.Email,
+                Telephone = view.Telephone,
+                Address = view.Address,
+                Code = view.Code,
+                Door = view.Door,
+                Location = view.Location,
+                ImagePath = view.ImagePath,
+                Active = view.Active,
+            };
         }
 
         // GET: Contacts/Edit/5
@@ -81,7 +111,26 @@ namespace smileRed.Backend.Controllers
             {
                 return HttpNotFound();
             }
-            return View(contacts);
+            var view = ToView(contacts);
+            return View(view);
+        }
+
+        private ContactsView ToView(Contacts contacts)
+        {
+            return new ContactsView
+            {
+                ContactsId = contacts.ContactsId,
+                Company = contacts.Company,
+                Description = contacts.Description,
+                Email = contacts.Email,
+                Telephone = contacts.Telephone,
+                Address = contacts.Address,
+                Code = contacts.Code,
+                Door = contacts.Door,
+                Location = contacts.Location,
+                ImagePath = contacts.ImagePath,
+                Active = contacts.Active,
+            };
         }
 
         // POST: Contacts/Edit/5
@@ -89,15 +138,25 @@ namespace smileRed.Backend.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ContactsId,Company,Description,Email,Telephone,Address,Location,Code,Door,ImagePath,Active")] Contacts contacts)
+        public async Task<ActionResult> Edit(ContactsView view)
         {
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Images";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+                var contacts = ToContacts(view);
+                contacts.ImagePath = pic;
                 db.Entry(contacts).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(contacts);
+            return View(view);
         }
 
         // GET: Contacts/Delete/5

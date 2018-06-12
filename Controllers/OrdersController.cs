@@ -191,14 +191,6 @@ namespace smileRed.Backend.Controllers
             return View(productorders);
         }
 
-        public ActionResult PrintPDF()
-        {
-            return new ActionAsPdf("DetailsAllOrders")
-            //new { iddd = id }
-
-            { FileName = "DetailsAllOrders.pdf" };
-        }
-
         public ActionResult DeleteAllOrders(int? id)
         {
             if (id == null)
