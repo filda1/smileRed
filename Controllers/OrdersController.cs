@@ -1,8 +1,9 @@
-﻿using Rotativa;
+using Rotativa;
 using smileRed.Backend.Models;
 using smileRed.Domain;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,9 +25,12 @@ namespace smileRed.Backend.Controllers
 
             var q = (from o in db.Orders
                      join od in db.OrderDetails on o.OrderID equals od.OrderID
+                     join os in db.OrderStatus on o.OrderStatusID equals os.OrderStatusID
                      join u in db.Users on o.Email equals u.Email
                      join p in db.Products on od.ProductID equals p.ProductId
-                     where o.ActiveOrders == true && od.ActiveOrderDetails == true
+                     where o.ActiveOrders == true
+                     && od.ActiveOrderDetails == true
+                     && o.Delete == false
                      && o.DateOrder >= TimePT
                      select new
                      {
@@ -43,7 +47,8 @@ namespace smileRed.Backend.Controllers
                          u.FirstName,
                          u.LastName,
                          p.VAT,
-                         u.Address
+                         u.Address,
+                         os.OrderStatusName,
                      });
 
             var productorders = new List<ProductsOrders>();
@@ -62,7 +67,8 @@ namespace smileRed.Backend.Controllers
                     Quantity = t.Quantity,
                     DateOrder = t.DateOrder,
                     VAT = t.VAT,
-                    Address = t.Address
+                    Address = t.Address,
+                    OrderStatusName = t.OrderStatusName,
                 });
             }
             var countBD = productorders.Count();
@@ -75,7 +81,7 @@ namespace smileRed.Backend.Controllers
             int _newCounter = countBD - numVirtual;
             ViewBag.TEST = _newCounter;
 
-           if (countBD > numVirtual)
+            if (countBD > numVirtual)
             {
                 int newCounter = countBD - numVirtual;
                 ViewBag.TEST = newCounter;
@@ -94,7 +100,7 @@ namespace smileRed.Backend.Controllers
                 n2.VirtualCounter = countBD;
                 db.SaveChanges();
             }
-            
+
             return View(productorders);
         }
 
@@ -113,6 +119,7 @@ namespace smileRed.Backend.Controllers
             //Order product = await db.Orders.FindAsync(id);
             var q = (from o in db.Orders
                      join od in db.OrderDetails on o.OrderID equals od.OrderID
+                     join os in db.OrderStatus on o.OrderStatusID equals os.OrderStatusID
                      join u in db.Users on o.Email equals u.Email
                      join p in db.Products on od.ProductID equals p.ProductId
                      where o.ActiveOrders == true && od.ActiveOrderDetails == true
@@ -135,7 +142,11 @@ namespace smileRed.Backend.Controllers
                          u.Location,
                          u.Code,
                          u.Door,
-                         u.Telephone
+                         u.Telephone,
+                         os.OrderStatusName,
+                         os.OrderStatusID,
+                         o.Email,
+                         o.Delete,
                      });
 
             var productorders = new List<ProductsOrders>();
@@ -158,7 +169,10 @@ namespace smileRed.Backend.Controllers
                     Location = t.Location,
                     Code = t.Code,
                     Door = t.Door,
-                    Telephone = t.Telephone
+                    Telephone = t.Telephone,
+                    OrderStatusName = t.OrderStatusName,
+                    Delete = t.Delete,
+                   
                 });
             }
             string fullname = productorders.Where(p => p.OrderID == id).FirstOrDefault().FullName;
@@ -197,22 +211,25 @@ namespace smileRed.Backend.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            OrderDetails mov = db.OrderDetails.Find(id);
-            if (mov == null)
+            Order order = db.Orders.Find(id);
+            order.Delete = true;
+            db.Entry(order).State = EntityState.Modified;
+            db.SaveChanges();
+
+            if (order == null)
             {
                 return HttpNotFound();
             }
-            return View(mov);
+            return RedirectToAction("ViewOrders");
         }
 
-        [HttpPost, ActionName("DeleteAllOrders")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteAllOrdersConfirmed(int id)
+        private ProductsOrders ToView(Order order)
         {
-            OrderDetails mov = db.OrderDetails.Find(id);
-            db.OrderDetails.Remove(mov);
-            db.SaveChanges();
-            return RedirectToAction("ViewOrders");
+            return new ProductsOrders
+            {
+                OrderID = order.OrderID,
+                Delete = order.Delete,
+            };
         }
 
         protected override void Dispose(bool disposing)
