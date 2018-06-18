@@ -1,4 +1,4 @@
-﻿@model IEnumerable<smileRed.Backend.Models.ProductsOrders>
+@model IEnumerable<smileRed.Backend.Models.ProductsOrders>
 @{
     /**/
 
@@ -14,7 +14,7 @@
     <table class="table table-bordered ">
         <tr class="active">
             <th>
-                @Html.DisplayNameFor(model => model.OrderDetailsID)
+                @Html.DisplayNameFor(model => model.OrderID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FullName)
@@ -38,6 +38,9 @@
                 @Html.DisplayNameFor(model => model.DateOrder)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.OrderStatusName)
+            </th>
+            <th>
             </th>
         </tr>
 
@@ -45,7 +48,7 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderDetailsID)
+                    @Html.DisplayFor(modelItem => item.OrderID)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.FullName)
@@ -70,13 +73,17 @@
                     @Html.DisplayFor(modelItem => item.DateOrder)
                 </td>
                 <td>
-                    @Html.ActionLink("Delete", "DeleteAllOrders", new { id = item.OrderDetailsID }) |
+                    @Html.DisplayFor(modelItem => item.OrderStatusName)
+                </td>
+                <td>
+                    @Html.ActionLink("Hide", "DeleteAllOrders", new { id = item.OrderID }) |
                     @Html.ActionLink("Details", "DetailsAllOrders", new { id = item.OrderID })
                 </td>
             </tr>
         }
     </table>
-</div>
+    </br>
+    <p><h6>Note: To activate again the record go to Orders, and place Hide ☐)</h6></p>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Sound/blip.wav")
