@@ -1,4 +1,4 @@
-﻿@model IEnumerable<smileRed.Domain.OrderDetails>
+@model IEnumerable<smileRed.Domain.OrderDetails>
 
 @{
     ViewBag.Title = "Index";
@@ -30,7 +30,7 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
-            </th>        
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.VisibleOrderDetails)
             </th>
@@ -75,4 +75,6 @@
             </tr>
         }
     </table>
+    </br>
+    <p><h6>Note: You can not Delete until the user allows (Visible ☑)</h6></p>
 </div>
