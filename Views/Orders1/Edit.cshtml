@@ -1,4 +1,4 @@
-﻿@model smileRed.Domain.Order
+@model smileRed.Domain.Order
 
 @{
     ViewBag.Title = "Edit";
@@ -62,6 +62,16 @@
             <div class="checkbox">
                 @Html.EditorFor(model => model.ActiveOrders)
                 @Html.ValidationMessageFor(model => model.ActiveOrders, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Delete, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @Html.EditorFor(model => model.Delete)
+                @Html.ValidationMessageFor(model => model.Delete, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
