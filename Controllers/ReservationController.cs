@@ -1,4 +1,4 @@
-﻿using smileRed.Backend.Models;
+using smileRed.Backend.Models;
 using smileRed.Domain;
 using System;
 using System.Collections.Generic;
@@ -16,10 +16,13 @@ namespace smileRed.Backend.Controllers
         // GET: Reservation
         public ActionResult ViewReservation()
         {
-            var today = DateTime.Today;
+            DateTime thisTime = DateTime.Now;
+            TimeZoneInfo InfoZone = TimeZoneInfo.FindSystemTimeZoneById("GMT Standard Time");
+            DateTime TimePT = TimeZoneInfo.ConvertTime(thisTime, TimeZoneInfo.Local, InfoZone);
+
             var q = (from r in db.Reservations
                      join u in db.Users on r.Email equals u.Email
-                     where  r.ReservationDate >= today
+                     where r.ReservationDate >= TimePT
                      select new
                      {
                          r.ReservationId,
