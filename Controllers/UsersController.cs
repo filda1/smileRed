@@ -74,16 +74,28 @@ namespace smileRed.API.Controllers
         // POST: api/Users
         [ResponseType(typeof(User))]
         public async Task<IHttpActionResult> PostUser(User user)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        {                
+                if (user.ImageArray != null && user.ImageArray.Length > 0)
+                 {
+                    var stream = new MemoryStream(user.ImageArray);
+                    var guid = Guid.NewGuid().ToString();
+                    var file = string.Format("{0}.jpg", guid);
+                    var folder = "~/Content/Images";
+                    var fullPath = string.Format("{0}/{1}", folder, file);
+                    var response = FilesHelper.UploadPhoto(stream, folder, file);
+                   
+                    if (response)
+                    {
+                      user.ImagePath = fullPath;
+                    }
 
-            db.Users.Add(user);
-            await db.SaveChangesAsync();
+            
 
-            return CreatedAtRoute("DefaultApi", new { id = user.UserId }, user);
+                db.Users.Add(user);           
+                await db.SaveChangesAsync();
+                UsersHelper.CreateUserASP(user.Email, "User", user.Password);
+                return CreatedAtRoute("DefaultApi", new { id = user.UserId }, user);
+           }
         }
 
         // DELETE: api/Users/5
