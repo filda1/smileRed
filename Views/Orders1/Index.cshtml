@@ -1,4 +1,4 @@
-﻿@model IEnumerable<smileRed.Domain.Order>
+@model IEnumerable<smileRed.Domain.Order>
 
 @{
     ViewBag.Title = "Index";
@@ -35,6 +35,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.ActiveOrders)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Delete)
+            </th>
             <th></th>
         </tr>
 
@@ -63,6 +66,9 @@
                 @Html.DisplayFor(modelItem => item.ActiveOrders)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Delete)
+            </td>
+            <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.OrderID }) |
                 @Html.ActionLink("Details", "Details", new { id = item.OrderID }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.OrderID })
@@ -70,4 +76,6 @@
         </tr>
         }
     </table>
+    </br>
+    <p><h6>Note: You can not Delete until the user allows (Visible ☑)</h6></p>
 </div>
