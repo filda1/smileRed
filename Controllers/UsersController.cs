@@ -88,9 +88,6 @@ namespace smileRed.API.Controllers
                     {
                       user.ImagePath = fullPath;
                     }
-
-            
-
                 db.Users.Add(user);           
                 await db.SaveChangesAsync();
                 UsersHelper.CreateUserASP(user.Email, "User", user.Password);
